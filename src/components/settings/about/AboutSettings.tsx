@@ -28,7 +28,7 @@ export const AboutSettings: React.FC = () => {
 
   const handleDonateClick = async () => {
     try {
-      await openUrl("https://handy.computer/donate");
+      await openUrl("https://dlm.media");
     } catch (error) {
       console.error("Failed to open donate link:", error);
     }
@@ -57,7 +57,7 @@ export const AboutSettings: React.FC = () => {
           <Button
             variant="secondary"
             size="md"
-            onClick={() => openUrl("https://github.com/cjpais/Handy")}
+            onClick={() => openUrl("https://github.com/dlm-media/candy")}
           >
             {t("settings.about.sourceCode.button")}
           </Button>
@@ -71,6 +71,16 @@ export const AboutSettings: React.FC = () => {
           <Button variant="primary" size="md" onClick={handleDonateClick}>
             {t("settings.about.supportDevelopment.button")}
           </Button>
+        </SettingContainer>
+
+        <SettingContainer
+          title={t("settings.about.attribution.title")}
+          description={t("settings.about.attribution.description")}
+          grouped={true}
+          layout="stacked"
+          descriptionMode="inline"
+        >
+          <div />
         </SettingContainer>
       </SettingsGroup>
 

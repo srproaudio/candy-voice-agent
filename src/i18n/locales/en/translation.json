@@ -58,7 +58,7 @@
     },
     "permissions": {
       "title": "Permissions Required",
-      "description": "Handy needs a couple of permissions to work properly.",
+      "description": "Candy needs a couple of permissions to work properly.",
       "microphone": {
         "title": "Microphone Access",
         "description": "Required to hear your voice for transcription."
@@ -78,7 +78,7 @@
     }
   },
   "modelSelector": {
-    "welcome": "Welcome to Handy!",
+    "welcome": "Welcome to Candy!",
     "downloadPrompt": "Download a model below to get started with transcription.",
     "availableModels": "Available Models",
     "downloadModels": "Download Models",
@@ -104,7 +104,7 @@
     "general": {
       "title": "General",
       "shortcut": {
-        "title": "Handy Shortcuts",
+        "title": "Candy Shortcuts",
         "description": "Configure keyboard shortcuts to trigger speech-to-text recording",
         "loading": "Loading shortcuts...",
         "none": "No shortcuts configured",
@@ -170,7 +170,7 @@
       },
       "autostart": {
         "label": "Launch on Startup",
-        "description": "Automatically start Handy when you log in to your computer."
+        "description": "Automatically start Candy when you log in to your computer."
       },
       "overlay": {
         "title": "Overlay Position",
@@ -308,7 +308,7 @@
       },
       "updateChecks": {
         "label": "Check for Updates",
-        "description": "Automatically check for new versions of Handy"
+        "description": "Automatically check for new versions of Candy"
       },
       "soundTheme": {
         "label": "Sound Theme",
@@ -363,11 +363,11 @@
       "title": "About",
       "version": {
         "title": "Version",
-        "description": "Current version of Handy"
+        "description": "Current version of Candy"
       },
       "appDataDirectory": {
         "title": "App Data Directory",
-        "description": "Location where Handy stores its data"
+        "description": "Location where Candy stores its data"
       },
       "sourceCode": {
         "title": "Source Code",
@@ -376,7 +376,7 @@
       },
       "supportDevelopment": {
         "title": "Support Development",
-        "description": "Help us continue building Handy",
+        "description": "Help us continue building Candy",
         "button": "Donate"
       },
       "acknowledgments": {
@@ -384,8 +384,12 @@
         "whisper": {
           "title": "Whisper.cpp",
           "description": "High-performance inference of OpenAI's Whisper automatic speech recognition model",
-          "details": "Handy uses Whisper.cpp for fast, local speech-to-text processing. Thanks to the amazing work by Georgi Gerganov and contributors."
+          "details": "Candy uses Whisper.cpp for fast, local speech-to-text processing. Thanks to the amazing work by Georgi Gerganov and contributors."
         }
+      },
+      "attribution": {
+        "title": "Attribution",
+        "description": "Candy by DLM is based on the open-source Handy project (MIT License)."
       }
     }
   },
@@ -427,7 +431,7 @@
   },
   "accessibility": {
     "permissionsRequired": "Accessibility Permissions Required",
-    "permissionsDescription": "Handy needs accessibility permissions to type transcribed text.",
+    "permissionsDescription": "Candy needs accessibility permissions to type transcribed text.",
     "openSettings": "Open System Settings",
     "dismiss": "Dismiss"
   },
@@ -436,7 +440,7 @@
   },
   "appLanguage": {
     "title": "Application Language",
-    "description": "Change the language of the Handy interface"
+    "description": "Change the language of the Candy interface"
   },
   "overlay": {
     "transcribing": "Transcribing..."

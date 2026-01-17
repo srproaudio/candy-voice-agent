@@ -13,14 +13,14 @@ import { useSettings } from "../../hooks/useSettings";
 import { commands } from "@/bindings";
 import { toast } from "sonner";
 
-interface HandyShortcutProps {
+interface CandyShortcutProps {
   descriptionMode?: "inline" | "tooltip";
   grouped?: boolean;
   shortcutId: string;
   disabled?: boolean;
 }
 
-export const HandyShortcut: React.FC<HandyShortcutProps> = ({
+export const CandyShortcut: React.FC<CandyShortcutProps> = ({
   descriptionMode = "tooltip",
   grouped = false,
   shortcutId,
