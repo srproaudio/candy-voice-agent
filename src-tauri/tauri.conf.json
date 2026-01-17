@@ -68,11 +68,5 @@
       }
     }
   },
-  "plugins": {
-    "updater": {
-      "endpoints": [
-        "https://github.com/dlm-media/candy/releases/latest/download/latest.json"
-      ]
-    }
-  }
+  "plugins": {}
 }
