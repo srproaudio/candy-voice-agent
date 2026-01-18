@@ -67,7 +67,7 @@ chrono = "0.4"
 rusqlite = { version = "0.37", features = ["bundled"] }
 tar = "0.4.44"
 flate2 = "1.0"
-transcribe-rs = { version = "0.2.2", features = ["whisper", "parakeet", "moonshine"] }
+ 
 ferrous-opencc = "0.2.3"
 specta = "=2.0.0-rc.22"
 specta-typescript = "0.0.9"
@@ -83,6 +83,7 @@ tauri-plugin-single-instance = "2.3.2"
 tauri-plugin-updater = "2.9.0"
 
 [target.'cfg(windows)'.dependencies]
+transcribe-rs = { version = "0.2.2", features = ["whisper"] }
 windows = { version = "0.61.3", features = [
   "Win32_Media_Audio_Endpoints",
   "Win32_System_Com_StructuredStorage",
@@ -93,6 +94,9 @@ windows = { version = "0.61.3", features = [
 
 [target.'cfg(target_os = "macos")'.dependencies]
 tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2.1" }
+
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+transcribe-rs = { version = "0.2.2", features = ["whisper", "parakeet", "moonshine"] }
 
 [patch.crates-io]
 transcribe-rs = { path = "vendor/transcribe-rs" }

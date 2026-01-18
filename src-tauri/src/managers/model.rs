@@ -145,63 +145,66 @@ impl ModelManager {
             },
         );
 
-        // Add NVIDIA Parakeet models (directory-based)
-        available_models.insert(
-            "parakeet-tdt-0.6b-v2".to_string(),
-            ModelInfo {
-                id: "parakeet-tdt-0.6b-v2".to_string(),
-                name: "Parakeet V2".to_string(),
-                description: "English only. The best model for English speakers.".to_string(),
-                filename: "parakeet-tdt-0.6b-v2-int8".to_string(), // Directory name
-                url: Some("https://blob.handy.computer/parakeet-v2-int8.tar.gz".to_string()),
-                size_mb: 473, // Approximate size for int8 quantized model
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::Parakeet,
-                accuracy_score: 0.85,
-                speed_score: 0.85,
-            },
-        );
+        // Add NVIDIA Parakeet and Moonshine models (directory-based)
+        #[cfg(not(target_os = "windows"))]
+        {
+            available_models.insert(
+                "parakeet-tdt-0.6b-v2".to_string(),
+                ModelInfo {
+                    id: "parakeet-tdt-0.6b-v2".to_string(),
+                    name: "Parakeet V2".to_string(),
+                    description: "English only. The best model for English speakers.".to_string(),
+                    filename: "parakeet-tdt-0.6b-v2-int8".to_string(), // Directory name
+                    url: Some("https://blob.handy.computer/parakeet-v2-int8.tar.gz".to_string()),
+                    size_mb: 473, // Approximate size for int8 quantized model
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::Parakeet,
+                    accuracy_score: 0.85,
+                    speed_score: 0.85,
+                },
+            );
 
-        available_models.insert(
-            "parakeet-tdt-0.6b-v3".to_string(),
-            ModelInfo {
-                id: "parakeet-tdt-0.6b-v3".to_string(),
-                name: "Parakeet V3".to_string(),
-                description: "Fast and accurate".to_string(),
-                filename: "parakeet-tdt-0.6b-v3-int8".to_string(), // Directory name
-                url: Some("https://blob.handy.computer/parakeet-v3-int8.tar.gz".to_string()),
-                size_mb: 478, // Approximate size for int8 quantized model
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::Parakeet,
-                accuracy_score: 0.80,
-                speed_score: 0.85,
-            },
-        );
+            available_models.insert(
+                "parakeet-tdt-0.6b-v3".to_string(),
+                ModelInfo {
+                    id: "parakeet-tdt-0.6b-v3".to_string(),
+                    name: "Parakeet V3".to_string(),
+                    description: "Fast and accurate".to_string(),
+                    filename: "parakeet-tdt-0.6b-v3-int8".to_string(), // Directory name
+                    url: Some("https://blob.handy.computer/parakeet-v3-int8.tar.gz".to_string()),
+                    size_mb: 478, // Approximate size for int8 quantized model
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::Parakeet,
+                    accuracy_score: 0.80,
+                    speed_score: 0.85,
+                },
+            );
 
-        available_models.insert(
-            "moonshine-base".to_string(),
-            ModelInfo {
-                id: "moonshine-base".to_string(),
-                name: "Moonshine Base".to_string(),
-                description: "Very fast, English only. Handles accents well.".to_string(),
-                filename: "moonshine-base".to_string(),
-                url: Some("https://blob.handy.computer/moonshine-base.tar.gz".to_string()),
-                size_mb: 58,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::Moonshine,
-                accuracy_score: 0.70,
-                speed_score: 0.90,
-            },
-        );
+            available_models.insert(
+                "moonshine-base".to_string(),
+                ModelInfo {
+                    id: "moonshine-base".to_string(),
+                    name: "Moonshine Base".to_string(),
+                    description: "Very fast, English only. Handles accents well.".to_string(),
+                    filename: "moonshine-base".to_string(),
+                    url: Some("https://blob.handy.computer/moonshine-base.tar.gz".to_string()),
+                    size_mb: 58,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::Moonshine,
+                    accuracy_score: 0.70,
+                    speed_score: 0.90,
+                },
+            );
+        }
 
         let manager = Self {
             app_handle: app_handle.clone(),
