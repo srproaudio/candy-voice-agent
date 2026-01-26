@@ -139,9 +139,7 @@ impl TranscriptionManager {
             if let Some(ref mut loaded_engine) = *engine {
                 match loaded_engine {
                     LoadedEngine::Whisper(ref mut e) => e.unload_model(),
-                    #[cfg(not(target_os = "windows"))]
                     LoadedEngine::Parakeet(ref mut e) => e.unload_model(),
-                    #[cfg(not(target_os = "windows"))]
                     LoadedEngine::Moonshine(ref mut e) => e.unload_model(),
                 }
             }
