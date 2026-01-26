@@ -41,6 +41,13 @@ jobs:
             libgtk-3-dev \
             libsoup-3.0-dev
 
+      - name: Install Vulkan SDK (Windows)
+        if: runner.os == 'Windows'
+        uses: humbletim/install-vulkan-sdk@v1.2
+        with:
+          version: 1.4.309.0
+          cache: true
+
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
@@ -53,7 +60,7 @@ jobs:
       - name: Build Tauri App
         env:
           CI: "false"
-          CMAKE_ARGS: "-DGGML_VULKAN=OFF"
+          CMAKE_ARGS: "-DGGML_VULKAN=ON"
         run: npm run tauri build
 
       - name: Upload Artifacts

@@ -51,7 +51,8 @@ async-trait = { version = "0.1.89", optional = true }
 whisper-rs = { version = "0.13.2", features = ["metal"], optional = true }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-whisper-rs = { version = "0.13.2", optional = true }
+whisper-rs = { version = "0.13.2", features = ["vulkan"], optional = true }
+ort = { version = "2.0.0-rc.10", features = ["directml"], optional = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 whisper-rs = { version = "0.13.2", optional = true }

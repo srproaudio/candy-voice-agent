@@ -146,65 +146,62 @@ impl ModelManager {
         );
 
         // Add NVIDIA Parakeet and Moonshine models (directory-based)
-        #[cfg(not(target_os = "windows"))]
-        {
-            available_models.insert(
-                "parakeet-tdt-0.6b-v2".to_string(),
-                ModelInfo {
-                    id: "parakeet-tdt-0.6b-v2".to_string(),
-                    name: "Parakeet V2".to_string(),
-                    description: "English only. The best model for English speakers.".to_string(),
-                    filename: "parakeet-tdt-0.6b-v2-int8".to_string(), // Directory name
-                    url: Some("https://blob.handy.computer/parakeet-v2-int8.tar.gz".to_string()),
-                    size_mb: 473, // Approximate size for int8 quantized model
-                    is_downloaded: false,
-                    is_downloading: false,
-                    partial_size: 0,
-                    is_directory: true,
-                    engine_type: EngineType::Parakeet,
-                    accuracy_score: 0.85,
-                    speed_score: 0.85,
-                },
-            );
+        available_models.insert(
+            "parakeet-tdt-0.6b-v2".to_string(),
+            ModelInfo {
+                id: "parakeet-tdt-0.6b-v2".to_string(),
+                name: "Parakeet V2".to_string(),
+                description: "English only. The best model for English speakers.".to_string(),
+                filename: "parakeet-tdt-0.6b-v2-int8".to_string(), // Directory name
+                url: Some("https://blob.handy.computer/parakeet-v2-int8.tar.gz".to_string()),
+                size_mb: 473, // Approximate size for int8 quantized model
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: true,
+                engine_type: EngineType::Parakeet,
+                accuracy_score: 0.85,
+                speed_score: 0.85,
+            },
+        );
 
-            available_models.insert(
-                "parakeet-tdt-0.6b-v3".to_string(),
-                ModelInfo {
-                    id: "parakeet-tdt-0.6b-v3".to_string(),
-                    name: "Parakeet V3".to_string(),
-                    description: "Fast and accurate".to_string(),
-                    filename: "parakeet-tdt-0.6b-v3-int8".to_string(), // Directory name
-                    url: Some("https://blob.handy.computer/parakeet-v3-int8.tar.gz".to_string()),
-                    size_mb: 478, // Approximate size for int8 quantized model
-                    is_downloaded: false,
-                    is_downloading: false,
-                    partial_size: 0,
-                    is_directory: true,
-                    engine_type: EngineType::Parakeet,
-                    accuracy_score: 0.80,
-                    speed_score: 0.85,
-                },
-            );
+        available_models.insert(
+            "parakeet-tdt-0.6b-v3".to_string(),
+            ModelInfo {
+                id: "parakeet-tdt-0.6b-v3".to_string(),
+                name: "Parakeet V3".to_string(),
+                description: "Fast and accurate".to_string(),
+                filename: "parakeet-tdt-0.6b-v3-int8".to_string(), // Directory name
+                url: Some("https://blob.handy.computer/parakeet-v3-int8.tar.gz".to_string()),
+                size_mb: 478, // Approximate size for int8 quantized model
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: true,
+                engine_type: EngineType::Parakeet,
+                accuracy_score: 0.80,
+                speed_score: 0.85,
+            },
+        );
 
-            available_models.insert(
-                "moonshine-base".to_string(),
-                ModelInfo {
-                    id: "moonshine-base".to_string(),
-                    name: "Moonshine Base".to_string(),
-                    description: "Very fast, English only. Handles accents well.".to_string(),
-                    filename: "moonshine-base".to_string(),
-                    url: Some("https://blob.handy.computer/moonshine-base.tar.gz".to_string()),
-                    size_mb: 58,
-                    is_downloaded: false,
-                    is_downloading: false,
-                    partial_size: 0,
-                    is_directory: true,
-                    engine_type: EngineType::Moonshine,
-                    accuracy_score: 0.70,
-                    speed_score: 0.90,
-                },
-            );
-        }
+        available_models.insert(
+            "moonshine-base".to_string(),
+            ModelInfo {
+                id: "moonshine-base".to_string(),
+                name: "Moonshine Base".to_string(),
+                description: "Very fast, English only. Handles accents well.".to_string(),
+                filename: "moonshine-base".to_string(),
+                url: Some("https://blob.handy.computer/moonshine-base.tar.gz".to_string()),
+                size_mb: 58,
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: true,
+                engine_type: EngineType::Moonshine,
+                accuracy_score: 0.70,
+                speed_score: 0.90,
+            },
+        );
 
         let manager = Self {
             app_handle: app_handle.clone(),
@@ -220,6 +217,8 @@ impl ModelManager {
 
         // Auto-select a model if none is currently selected
         manager.auto_select_model_if_needed()?;
+        // Ensure selected model exists for the current platform
+        manager.ensure_selected_model_available()?;
 
         Ok(manager)
     }
@@ -329,6 +328,37 @@ impl ModelManager {
 
                 info!("Successfully auto-selected model: {}", available_model.id);
             }
+        }
+
+        Ok(())
+    }
+
+    fn ensure_selected_model_available(&self) -> Result<()> {
+        let settings = get_settings(&self.app_handle);
+        if settings.selected_model.is_empty() {
+            return Ok(());
+        }
+
+        let models = self.available_models.lock().unwrap();
+        if models.contains_key(&settings.selected_model) {
+            return Ok(());
+        }
+        drop(models);
+
+        warn!(
+            "Selected model '{}' is not available on this platform; resetting",
+            settings.selected_model
+        );
+
+        let models = self.available_models.lock().unwrap();
+        if let Some(available_model) = models.values().find(|model| model.is_downloaded) {
+            let mut updated_settings = settings;
+            updated_settings.selected_model = available_model.id.clone();
+            write_settings(&self.app_handle, updated_settings);
+            info!(
+                "Reset selected model to {} ({})",
+                available_model.id, available_model.name
+            );
         }
 
         Ok(())

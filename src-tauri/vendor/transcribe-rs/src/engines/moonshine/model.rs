@@ -1,5 +1,7 @@
 use ndarray::{Array2, ArrayD};
 use ort::execution_providers::CPUExecutionProvider;
+#[cfg(target_os = "windows")]
+use ort::execution_providers::DirectMLExecutionProvider;
 use ort::inputs;
 use ort::session::builder::GraphOptimizationLevel;
 use ort::session::Session;
@@ -94,6 +96,13 @@ impl MoonshineModel {
     }
 
     fn init_session(path: &Path) -> Result<Session, MoonshineError> {
+        #[cfg(target_os = "windows")]
+        let providers = vec![
+            DirectMLExecutionProvider::default().build(),
+            CPUExecutionProvider::default().build(),
+        ];
+
+        #[cfg(not(target_os = "windows"))]
         let providers = vec![CPUExecutionProvider::default().build()];
 
         let session = Session::builder()?

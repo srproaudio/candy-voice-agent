@@ -174,4 +174,10 @@ optional = true
 
 [target.'cfg(target_os = "windows")'.dependencies.whisper-rs]
 version = "0.13.2"
+features = ["vulkan"]
+optional = true
+
+[target.'cfg(target_os = "windows")'.dependencies.ort]
+version = "2.0.0-rc.10"
+features = ["directml"]
 optional = true

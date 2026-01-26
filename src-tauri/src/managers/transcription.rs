@@ -11,9 +11,7 @@ use std::time::{Duration, SystemTime};
 use tauri::{AppHandle, Emitter};
 use transcribe_rs::{engines::whisper::WhisperEngine, TranscriptionEngine};
 use transcribe_rs::engines::whisper::WhisperInferenceParams;
-#[cfg(not(target_os = "windows"))]
 use transcribe_rs::engines::moonshine::{ModelVariant, MoonshineEngine, MoonshineModelParams};
-#[cfg(not(target_os = "windows"))]
 use transcribe_rs::engines::parakeet::{
     ParakeetEngine, ParakeetInferenceParams, ParakeetModelParams, TimestampGranularity,
 };
@@ -28,9 +26,7 @@ pub struct ModelStateEvent {
 
 enum LoadedEngine {
     Whisper(WhisperEngine),
-    #[cfg(not(target_os = "windows"))]
     Parakeet(ParakeetEngine),
-    #[cfg(not(target_os = "windows"))]
     Moonshine(MoonshineEngine),
 }
 
@@ -243,7 +239,6 @@ impl TranscriptionManager {
                 })?;
                 LoadedEngine::Whisper(engine)
             }
-            #[cfg(not(target_os = "windows"))]
             EngineType::Parakeet => {
                 let mut engine = ParakeetEngine::new();
                 engine
@@ -264,13 +259,6 @@ impl TranscriptionManager {
                     })?;
                 LoadedEngine::Parakeet(engine)
             }
-            #[cfg(target_os = "windows")]
-            EngineType::Parakeet => {
-                return Err(anyhow::anyhow!(
-                    "Parakeet is not available in the Windows build."
-                ));
-            }
-            #[cfg(not(target_os = "windows"))]
             EngineType::Moonshine => {
                 let mut engine = MoonshineEngine::new();
                 engine
@@ -293,12 +281,6 @@ impl TranscriptionManager {
                         anyhow::anyhow!(error_msg)
                     })?;
                 LoadedEngine::Moonshine(engine)
-            }
-            #[cfg(target_os = "windows")]
-            EngineType::Moonshine => {
-                return Err(anyhow::anyhow!(
-                    "Moonshine is not available in the Windows build."
-                ));
             }
         };
 
@@ -342,9 +324,19 @@ impl TranscriptionManager {
         *is_loading = true;
         let self_clone = self.clone();
         thread::spawn(move || {
-            let settings = get_settings(&self_clone.app_handle);
-            if let Err(e) = self_clone.load_model(&settings.selected_model) {
-                error!("Failed to load model: {}", e);
+            let load_result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                let settings = get_settings(&self_clone.app_handle);
+                self_clone.load_model(&settings.selected_model)
+            }));
+
+            match load_result {
+                Ok(Ok(())) => {}
+                Ok(Err(e)) => {
+                    error!("Failed to load model: {}", e);
+                }
+                Err(_) => {
+                    error!("Model load panicked; clearing loading state");
+                }
             }
             let mut is_loading = self_clone.is_loading.lock().unwrap();
             *is_loading = false;
@@ -430,7 +422,6 @@ impl TranscriptionManager {
                         .transcribe_samples(audio, Some(params))
                         .map_err(|e| anyhow::anyhow!("Whisper transcription failed: {}", e))?
                 }
-                #[cfg(not(target_os = "windows"))]
                 LoadedEngine::Parakeet(parakeet_engine) => {
                     let params = ParakeetInferenceParams {
                         timestamp_granularity: TimestampGranularity::Segment,
@@ -440,7 +431,6 @@ impl TranscriptionManager {
                         .transcribe_samples(audio, Some(params))
                         .map_err(|e| anyhow::anyhow!("Parakeet transcription failed: {}", e))?
                 }
-                #[cfg(not(target_os = "windows"))]
                 LoadedEngine::Moonshine(moonshine_engine) => moonshine_engine
                     .transcribe_samples(audio, None)
                     .map_err(|e| anyhow::anyhow!("Moonshine transcription failed: {}", e))?,
